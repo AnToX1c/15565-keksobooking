@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [ToX1c](https://up.htmlacademy.ru/javascript/11/user/15565).
-* Наставник: `Неизвестно`.
+* Студент: [Антон Лапшин](https://up.htmlacademy.ru/javascript/11/user/15565).
+* Наставник: [Константин Мамаев](https://github.com/MrMeison).
 
 ---
 
