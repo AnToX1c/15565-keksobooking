@@ -37,10 +37,6 @@ var generateNumberOfRooms = function () {
   return getRandomInt(minNumberOfRooms, maxNumberOfRooms);
 };
 
-var getRandomArrayItem = function (arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
-
 var getArrayOfRandomItems = function (arr) {
   var tempArr = [];
   var compareRandom = function () {
@@ -64,11 +60,11 @@ var createAds = function (i) {
       title: TITLES[i],
       address: location.x + ',' + location.y,
       price: getRandomInt(minPrice, maxPrice),
-      type: getRandomArrayItem(TYPES),
+      type: TYPES[getRandomInt(0, TYPES.length - 1)],
       rooms: rooms,
       guests: getRandomInt(1, rooms * 2),
-      checkin: getRandomArrayItem(CHEKINS),
-      checkout: getRandomArrayItem(CHEKOUTS),
+      checkin: CHEKINS[getRandomInt(0, CHEKINS.length - 1)],
+      checkout: CHEKOUTS[getRandomInt(0, CHEKOUTS.length - 1)],
       features: getArrayOfRandomItems(FEATURES),
       description: '',
       photos: []
