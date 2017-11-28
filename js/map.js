@@ -38,14 +38,13 @@ var generateNumberOfRooms = function () {
 };
 
 var getArrayOfRandomItems = function (arr) {
-  var tempArr = [];
+  var arrlength = 0;
+  arrlength = getRandomInt(1, arr.length);
   var compareRandom = function () {
     return Math.random() - 0.5;
   };
   arr.sort(compareRandom);
-  tempArr.length = getRandomInt(1, arr.length);
-  tempArr = arr.slice(0, tempArr.length);
-  return tempArr;
+  return arr.slice(0, arrlength);
 };
 
 var createAds = function (i) {
