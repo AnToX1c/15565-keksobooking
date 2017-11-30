@@ -1,22 +1,6 @@
 'use strict';
 
-var totalNumberOfAds = 8;
-var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPES = ['flat', 'house', 'bungalo'];
-var CHEKINS = ['12:00', '13:00', '14:00'];
-var CHEKOUTS = ['12:00', '13:00', '14:00'];
-var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var ads = [];
-var minPrice = 1000;
-var maxPrice = 1000000;
-var minNumberOfRooms = 1;
-var maxNumberOfRooms = 5;
-var minPosX = 300;
-var maxPosX = 900;
-var minPosY = 100;
-var maxPosY = 500;
-var PINWIDTH = 6;
-var pinHeight = 40;
 
 var generateAvatar = function (i) {
   return 'img/avatars/user0' + (i + 1) + '.png';
@@ -26,15 +10,11 @@ var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var generateXYLocation = function () {
+var generateXYLocation = function (minPosX, maxPosX, minPosY, maxPosY) {
   return {
     x: getRandomInt(minPosX, maxPosX),
     y: getRandomInt(minPosY, maxPosY)
   };
-};
-
-var generateNumberOfRooms = function () {
-  return getRandomInt(minNumberOfRooms, maxNumberOfRooms);
 };
 
 var getArrayOfRandomItems = function (arr) {
@@ -47,9 +27,22 @@ var getArrayOfRandomItems = function (arr) {
   return arr.slice(0, arrlength);
 };
 
-var createAds = function (i) {
-  var location = generateXYLocation();
-  var rooms = generateNumberOfRooms();
+var generateAds = function (i) {
+  var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+  var TYPES = ['flat', 'house', 'bungalo'];
+  var CHEKINS = ['12:00', '13:00', '14:00'];
+  var CHEKOUTS = ['12:00', '13:00', '14:00'];
+  var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var minPrice = 1000;
+  var maxPrice = 1000000;
+  var minNumberOfRooms = 1;
+  var maxNumberOfRooms = 5;
+  var minPosX = 300;
+  var maxPosX = 900;
+  var minPosY = 100;
+  var maxPosY = 500;
+  var location = generateXYLocation(minPosX, maxPosX, minPosY, maxPosY);
+  var rooms = getRandomInt(minNumberOfRooms, maxNumberOfRooms);
 
   return {
     author: {
@@ -113,10 +106,11 @@ var templateMapCard = template.querySelector('article.map__card');
 var templateMapPin = template.querySelector('.map__pin');
 var fragmentMapPin = document.createDocumentFragment();
 
-var renderMapPins = function (ad) {
+var renderMapPinElement = function (ad) {
   var mapPinElement = templateMapPin.cloneNode(true);
-  pinHeight = mapPinElement.querySelector('img').height;
-  mapPinElement.style.left = ad.location.x - PINWIDTH + 'px';
+  var pinHeight = mapPinElement.querySelector('img').height;
+  var pinWidth = mapPinElement.querySelector('img').width;
+  mapPinElement.style.left = ad.location.x - pinWidth / 2 + 'px';
   mapPinElement.style.top = ad.location.y - pinHeight + 'px';
   mapPinElement.querySelector('img').src = ad.author.avatar;
   return mapPinElement;
@@ -136,9 +130,13 @@ var renderMapCard = function (ad) {
   return mapCardElement;
 };
 
-for (var i = 0; i < totalNumberOfAds; i++) {
-  ads[i] = createAds(i);
-  fragmentMapPin.appendChild(renderMapPins(ads[i]));
-}
-mapPins.appendChild(fragmentMapPin);
+var renderMapPins = function (totalNumberOfAds) {
+  for (var i = 0; i < totalNumberOfAds; i++) {
+    ads[i] = generateAds(i);
+    fragmentMapPin.appendChild(renderMapPinElement(ads[i]));
+  }
+  return fragmentMapPin;
+};
+
+mapPins.appendChild(renderMapPins(8));
 map.appendChild(renderMapCard(ads[0]));
