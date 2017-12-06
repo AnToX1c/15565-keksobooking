@@ -108,13 +108,14 @@
   var templateMapPin = template.querySelector('.map__pin');
   var fragmentMapPin = document.createDocumentFragment();
 
-  var renderMapPinElement = function (ad) {
+  var renderMapPinElement = function (ad, item) {
     var mapPinElement = templateMapPin.cloneNode(true);
     var pinHeight = mapPinElement.querySelector('img').height;
     var pinWidth = mapPinElement.querySelector('img').width;
     mapPinElement.style.left = ad.location.x - pinWidth / 2 + 'px';
     mapPinElement.style.top = ad.location.y - pinHeight + 'px';
     mapPinElement.querySelector('img').src = ad.author.avatar;
+    mapPinElement.querySelector('img').setAttribute('data-id', item);
     return mapPinElement;
   };
 
@@ -135,7 +136,7 @@
   var renderMapPins = function (totalNumberOfAds) {
     for (var i = 0; i < totalNumberOfAds; i++) {
       ads[i] = generateAds(i);
-      fragmentMapPin.appendChild(renderMapPinElement(ads[i]));
+      fragmentMapPin.appendChild(renderMapPinElement(ads[i], i));
     }
     return fragmentMapPin;
   };
@@ -147,23 +148,16 @@
     }
   };
 
-  var findPinId = function (target) {
-    var j = -1;
-    for (var i = 0; i < ads.length; i++) {
-      if (target.attributes[0].value === ads[i].author.avatar) {
-        j = i;
-      }
+  var onPinClick = function (evt) {
+    if (evt.target.dataset.id >= 0) {
+      showPopup(evt.target);
     }
-    return j;
-  };
-
-  var onPinPress = function (evt) {
-    showPopup(evt);
   };
 
   var onPinEnterPress = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      showPopup(evt);
+      var target = (evt.target.classList.contains('map__pin')) ? evt.target.firstChild : evt.target;
+      showPopup(target);
     }
   };
 
@@ -179,11 +173,10 @@
     }
   };
 
-  var showPopup = function (evt) {
-    var target = (evt.target.classList.contains('map__pin')) ? evt.target.firstChild : evt.target;
+  var showPopup = function (target) {
     closePopup();
     target.parentElement.classList.add('map__pin--active');
-    map.appendChild(renderMapCard(ads[findPinId(target)]));
+    map.appendChild(renderMapCard(ads[target.dataset.id]));
     map.querySelector('.popup__close').addEventListener('mouseup', closePopup);
     map.querySelector('.popup__close').addEventListener('keydown', onPopupEnterPress);
     document.addEventListener('keydown', onPopupEscPress);
@@ -210,7 +203,7 @@
       noticeFormFieldset[i].disabled = false;
     }
     map.querySelector('.map__pin--main').removeEventListener('mouseup', enableForm);
-    mapPins.addEventListener('mouseup', onPinPress);
+    mapPins.addEventListener('click', onPinClick);
     mapPins.addEventListener('keydown', onPinEnterPress);
   };
 
