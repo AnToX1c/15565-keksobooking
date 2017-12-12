@@ -71,7 +71,7 @@
   noticeForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
   titleField.addEventListener('invalid', onTitleFieldInvalid);
   window.form = {
-    enable: function () {
+    enable: function (callback) {
       map.classList.remove('map--faded');
       var mapPins = map.querySelector('.map__pins');
       mapPins.appendChild(window.pin.render(8));
@@ -79,9 +79,6 @@
       for (var i = 0; i < noticeFormFieldset.length; i++) {
         noticeFormFieldset[i].disabled = false;
       }
-      map.querySelector('.map__pin--main').removeEventListener('mouseup', window.form.enable);
-      mapPins.addEventListener('click', window.pin.click);
-      mapPins.addEventListener('keydown', window.pin.pressEnter);
       addressField.setAttribute('readonly', 'true');
       addressField.setAttribute('required', 'true');
       titleField.setAttribute('required', 'true');
@@ -98,6 +95,7 @@
       timeoutField.addEventListener('change', onTimeoutChange);
       typeField.addEventListener('change', onTypeChange);
       roomNumberField.addEventListener('change', onRoomNumberChange);
+      callback(mapPins);
     },
     disable: function () {
       for (var i = 0; i < noticeFormFieldset.length; i++) {

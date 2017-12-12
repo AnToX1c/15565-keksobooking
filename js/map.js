@@ -1,7 +1,15 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var enablePins = function () {
+    var operateMapPinsEventListeners = function (mapPins) {
+      mapPinMain.removeEventListener('mouseup', enablePins);
+      mapPins.addEventListener('click', window.pin.onPinClick);
+      mapPins.addEventListener('keydown', window.pin.onPinPressEnter);
+    };
+    window.form.enable(operateMapPinsEventListeners);
+  };
   window.form.disable();
-  map.querySelector('.map__pin--main').addEventListener('mouseup', window.form.enable);
+  mapPinMain.addEventListener('mouseup', enablePins);
 })();
