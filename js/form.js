@@ -101,6 +101,9 @@
       for (var i = 0; i < noticeFormFieldset.length; i++) {
         noticeFormFieldset[i].disabled = true;
       }
+    },
+    updateAddress: function (mainPinX, mainPinY) {
+      addressField.value = 'x: ' + mainPinX + ', y: ' + mainPinY;
     }
   };
 })();
