@@ -12,28 +12,11 @@
   var typeField = noticeForm.querySelector('#type');
   var capacityField = noticeForm.querySelector('#capacity');
   var roomNumberField = noticeForm.querySelector('#room_number');
-  var onTimeinChange = function (evt) {
-    timeoutField.value = evt.target.value;
+  var syncValues = function (element, value) {
+    element.value = value;
   };
-  var onTimeoutChange = function (evt) {
-    timeinField.value = evt.target.value;
-  };
-
-  var onTypeChange = function (evt) {
-    switch (evt.target.value) {
-      case 'flat':
-        priceField.min = 1000;
-        break;
-      case 'bungalo':
-        priceField.min = 0;
-        break;
-      case 'house':
-        priceField.min = 5000;
-        break;
-      case 'palace':
-        priceField.min = 10000;
-        break;
-    }
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
   };
 
   var disableCapacityValues = function () {
@@ -91,9 +74,8 @@
       disableCapacityValues();
       capacityField.selectedIndex = 2;
       capacityField.options[2].disabled = false;
-      timeinField.addEventListener('change', onTimeinChange);
-      timeoutField.addEventListener('change', onTimeoutChange);
-      typeField.addEventListener('change', onTypeChange);
+      window.synchronizeFields(timeinField, timeoutField, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
+      window.synchronizeFields(typeField, priceField, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
       roomNumberField.addEventListener('change', onRoomNumberChange);
       callback(mapPins);
     },

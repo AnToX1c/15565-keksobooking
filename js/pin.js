@@ -34,13 +34,13 @@
     },
     onPinClick: function (evt) {
       if (evt.target.dataset.id >= 0) {
-        window.card.show(evt.target);
+        window.showCard(evt.target);
       }
     },
     onPinPressEnter: function (evt) {
       if (evt.keyCode === ENTER_KEYCODE) {
         var target = (evt.target.classList.contains('map__pin')) ? evt.target.firstChild : evt.target;
-        window.card.show(target);
+        window.showCard(target);
       }
     }
   };
