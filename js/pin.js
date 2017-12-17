@@ -5,7 +5,7 @@
   var map = document.querySelector('.map');
   var template = document.querySelector('template').content;
   var templateMapPin = template.querySelector('.map__pin');
-  var fragmentMapPin = document.createDocumentFragment();
+
   var renderMapPin = function (ad, index) {
     var mapPinElement = templateMapPin.cloneNode(true);
     var pinHeight = mapPinElement.querySelector('img').height;
@@ -18,13 +18,12 @@
   };
 
   window.pin = {
-    ads: [],
-    render: function (totalNumberOfAds) {
-      for (var i = 0; i < totalNumberOfAds; i++) {
-        window.pin.ads[i] = window.data.generateAds(i);
-        fragmentMapPin.appendChild(renderMapPin(window.pin.ads[i], i));
+    render: function (arrOfPins, callback) {
+      var fragmentMapPin = document.createDocumentFragment();
+      for (var i = 0; i < arrOfPins.length; i++) {
+        fragmentMapPin.appendChild(renderMapPin(arrOfPins[i], i));
       }
-      return fragmentMapPin;
+      callback(fragmentMapPin);
     },
     clearActive: function () {
       var activePin = map.querySelector('.map__pin--active');
@@ -32,15 +31,15 @@
         activePin.classList.remove('map__pin--active');
       }
     },
-    onPinClick: function (evt) {
+    onPinClick: function (evt, data) {
       if (evt.target.dataset.id >= 0) {
-        window.showCard(evt.target);
+        window.showCard(evt.target, data[evt.target.dataset.id]);
       }
     },
-    onPinPressEnter: function (evt) {
+    onPinPressEnter: function (evt, data) {
       if (evt.keyCode === ENTER_KEYCODE) {
         var target = (evt.target.classList.contains('map__pin')) ? evt.target.firstChild : evt.target;
-        window.showCard(target);
+        window.showCard(target, data[target.dataset.id]);
       }
     }
   };

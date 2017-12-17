@@ -19,18 +19,12 @@
     return type;
   };
   var getAmmountOfGuestsInRooms = function (guests, rooms) {
-    var guestString = ' гостей';
     var roomString = '';
-    if (guests === 1) {
-      guestString = ' гостя';
-    }
-    if (rooms === 1) {
-      roomString = ' комната';
-    } else if (rooms <= 4) {
-      roomString = ' комнаты';
-    } else {
-      roomString = ' комнат';
-    }
+    var guestString = '';
+    guestString = ((guests === 1) || (guests % 10 === 1)) ? ' гостя' : ' гостей';
+    var cases = [2, 0, 1, 1, 1, 2];
+    var roomsCases = [' комната', ' комнаты', ' комнат'];
+    roomString = roomsCases[(rooms % 100 > 4 && rooms % 100 < 20) ? 2 : cases[(rooms % 10 < 5) ? rooms % 10 : 5]];
     return rooms + roomString + ' для ' + guests + guestString;
   };
   var generatePopupFeatures = function (item) {
