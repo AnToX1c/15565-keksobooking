@@ -2,6 +2,7 @@
 
 (function () {
   var createRequest = function (onLoad, onError, method, url, data) {
+    var TIMEOUT = 25000;
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -27,9 +28,9 @@
       onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполнится за ' + xhr.TIMEOUT + 'мс');
+      onError('Запрос не успел выполнится за ' + xhr.timeout + 'мс');
     });
-    xhr.TIMEOUT = 25000;
+    xhr.timeout = TIMEOUT;
     xhr.open(method, url);
     xhr.send(data);
   };
