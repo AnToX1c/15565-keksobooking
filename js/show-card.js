@@ -23,10 +23,10 @@
     }
     window.pin.clearActive();
   };
-  window.showCard = function (target) {
+  window.showCard = function (target, ad) {
     closePopup();
     target.parentElement.classList.add('map__pin--active');
-    map.appendChild(window.card.render(window.pin.ads[target.dataset.id]));
+    map.appendChild(window.card.render(ad));
     map.querySelector('.popup__close').addEventListener('mouseup', closePopup);
     map.querySelector('.popup__close').addEventListener('keydown', onPopupEnterPress);
     document.addEventListener('keydown', onPopupEscPress);

@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormFieldset = noticeForm.querySelectorAll('fieldset');
   var addressField = noticeForm.querySelector('#address');
@@ -12,6 +11,7 @@
   var typeField = noticeForm.querySelector('#type');
   var capacityField = noticeForm.querySelector('#capacity');
   var roomNumberField = noticeForm.querySelector('#room_number');
+  var featuresFields = noticeForm.querySelectorAll('.features input[type=checkbox]');
   var syncValues = function (element, value) {
     element.value = value;
   };
@@ -51,13 +51,33 @@
       evt.target.setCustomValidity('');
     }
   };
-  noticeForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
+
+  var setDefaultFormFields = function () {
+    disableCapacityValues();
+    capacityField.selectedIndex = 2;
+    capacityField.options[2].disabled = false;
+    syncValues(titleField, '');
+    syncValues(addressField, '');
+    syncValues(typeField, 'flat');
+    syncValues(priceField, '1000');
+    syncValueWithMin(priceField, '1000');
+    syncValues(timeinField, '12:00');
+    syncValues(timeoutField, '12:00');
+    roomNumberField.selectedIndex = 0;
+    featuresFields.forEach(function (elem) {
+      elem.checked = false;
+    });
+  };
+
+  var onSubmit = function (evt) {
+    window.backend.save(new FormData(noticeForm), setDefaultFormFields, window.onError);
+    evt.preventDefault();
+  };
+
   titleField.addEventListener('invalid', onTitleFieldInvalid);
+  noticeForm.addEventListener('submit', onSubmit);
   window.form = {
-    enable: function (callback) {
-      map.classList.remove('map--faded');
-      var mapPins = map.querySelector('.map__pins');
-      mapPins.appendChild(window.pin.render(8));
+    enable: function () {
       noticeForm.classList.remove('notice__form--disabled');
       for (var i = 0; i < noticeFormFieldset.length; i++) {
         noticeFormFieldset[i].disabled = false;
@@ -68,16 +88,12 @@
       titleField.setAttribute('minlength', '30');
       titleField.setAttribute('maxlength', '100');
       priceField.setAttribute('required', 'true');
-      priceField.setAttribute('value', '1000');
       priceField.setAttribute('min', '0');
       priceField.setAttribute('max', '1000000');
-      disableCapacityValues();
-      capacityField.selectedIndex = 2;
-      capacityField.options[2].disabled = false;
+      setDefaultFormFields();
       window.synchronizeFields(timeinField, timeoutField, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
       window.synchronizeFields(typeField, priceField, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
       roomNumberField.addEventListener('change', onRoomNumberChange);
-      callback(mapPins);
     },
     disable: function () {
       for (var i = 0; i < noticeFormFieldset.length; i++) {

@@ -1,23 +1,35 @@
 'use strict';
 
 (function () {
-  // var mapPins = document.querySelector('.map__pins');
-  var mapPinMain = document.querySelector('.map__pin--main');
+  var map = document.querySelector('.map');
+  var mapPinMain = map.querySelector('.map__pin--main');
   var minPosY = 100;
   var maxPosY = 500;
 
   var enablePins = function () {
-    var operateMapPinsEventListeners = function (mapPins) {
-      mapPinMain.removeEventListener('mouseup', enablePins);
-      mapPins.addEventListener('click', window.pin.onPinClick);
-      mapPins.addEventListener('keydown', window.pin.onPinPressEnter);
-    };
-    window.form.enable(operateMapPinsEventListeners);
+    map.classList.remove('map--faded');
+    mapPinMain.removeEventListener('mouseup', enablePins);
+    window.form.enable();
+    window.backend.load(onMapPinsLoad, window.onError);
   };
 
   window.form.disable();
   mapPinMain.addEventListener('mouseup', enablePins);
   mapPinMain.draggable = true;
+
+  var onMapPinsLoad = function (data) {
+    var operateMapPins = function (mapPinsElement) {
+      var mapPins = map.querySelector('.map__pins');
+      mapPins.appendChild(mapPinsElement);
+      mapPins.addEventListener('click', function (evt) {
+        window.pin.onPinClick(evt, data);
+      });
+      mapPins.addEventListener('keydown', function (evt) {
+        window.pin.onPinPressEnter(evt, data);
+      });
+    };
+    window.pin.render(data, operateMapPins);
+  };
 
   var onMainPinMouseDown = function (evt) {
     evt.preventDefault();
@@ -64,4 +76,17 @@
   };
 
   mapPinMain.addEventListener('mousedown', onMainPinMouseDown);
+  window.onError = function (message) {
+    var fragment = document.createDocumentFragment();
+    var div = document.createElement('div');
+    div.style = 'z-index: 4; min-width: 250px; position:fixed; height: 120px; top:150px; left:50%; transform: translateX(-50%); box-sizing: border-box; padding: 10px 10px 20px; border-radius: 5px; border-color: #ff6d51; background-color: rgba(255, 56, 35, .7); box-shadow: 0 0 10px 10px rgba(255, 86, 53, .7); font-weight: bold; color: #fff; text-align:center';
+    var p = document.createElement('p');
+    var p1 = document.createElement('p');
+    p.textContent = message;
+    p1.textContent = 'Попробуйте позже';
+    div.appendChild(p);
+    div.appendChild(p1);
+    fragment.appendChild(div);
+    document.querySelector('main').appendChild(fragment);
+  };
 })();
