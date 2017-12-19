@@ -20,10 +20,13 @@
   window.pin = {
     render: function (arrOfPins, callback) {
       var fragmentMapPin = document.createDocumentFragment();
-      for (var i = 0; i < arrOfPins.length; i++) {
+      var length = arrOfPins.length > 5 ? 5 : arrOfPins.length;
+      for (var i = 0; i < length; i++) {
         fragmentMapPin.appendChild(renderMapPin(arrOfPins[i], i));
       }
-      callback(fragmentMapPin);
+      if (callback) {
+        callback(fragmentMapPin);
+      }
     },
     clearActive: function () {
       var activePin = map.querySelector('.map__pin--active');
