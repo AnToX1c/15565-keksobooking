@@ -8,6 +8,7 @@
   var minPosY = 100;
   var maxPosY = 500;
   var prevTimer;
+  var mainPinWidth = mapPinMain.offsetWidth;
 
   var enablePins = function () {
     map.classList.remove('map--faded');
@@ -83,12 +84,11 @@
     filteredPins = data;
     mapFilters.addEventListener('change', onFiltersChange);
     window.pin.render(data, operateMapPins);
+    window.form.updateAddress(parseInt(mapPinMain.offsetLeft, 10) + mainPinWidth / 2, parseInt(mapPinMain.offsetTop, 10));
   };
 
   var onMainPinMouseDown = function (evt) {
     evt.preventDefault();
-    var mainPinHeight = mapPinMain.offsetHeight;
-    var mainPinWidth = mapPinMain.offsetWidth;
     var setYLimit = function (posY) {
       if (posY < minPosY) {
         return minPosY;
@@ -121,7 +121,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       var mainPinX = parseInt(mapPinMain.style.left, 10) + mainPinWidth / 2;
-      var mainPinY = parseInt(mapPinMain.style.top, 10) + mainPinHeight;
+      var mainPinY = parseInt(mapPinMain.style.top, 10);
       window.form.updateAddress(mainPinX, mainPinY);
     };
 
@@ -130,18 +130,26 @@
   };
 
   mapPinMain.addEventListener('mousedown', onMainPinMouseDown);
+
   window.onError = function (message) {
     var fragment = document.createDocumentFragment();
     var div = document.createElement('div');
+    div.classList.add('error-message');
     div.style = 'z-index: 4; min-width: 250px; position:fixed; height: 120px; top:150px; left:50%; transform: translateX(-50%); box-sizing: border-box; padding: 10px 10px 20px; border-radius: 5px; border-color: #ff6d51; background-color: rgba(255, 56, 35, .7); box-shadow: 0 0 10px 10px rgba(255, 86, 53, .7); font-weight: bold; color: #fff; text-align:center';
     var p = document.createElement('p');
     var p1 = document.createElement('p');
-    p.textContent = message;
-    p1.textContent = 'Попробуйте позже';
+    var p2 = document.createElement('p');
+    p.textContent = 'Приносим извинения';
+    p1.textContent = message;
+    p2.textContent = 'Попробуйте позже';
     div.appendChild(p);
     div.appendChild(p1);
+    div.appendChild(p2);
     fragment.appendChild(div);
     document.querySelector('main').appendChild(fragment);
+    window.setTimeout(function () {
+      document.querySelector('.error-message').style = 'display: none;';
+    }, 3000);
   };
 
   var debounce = function (func) {

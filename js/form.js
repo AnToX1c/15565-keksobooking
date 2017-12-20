@@ -57,7 +57,6 @@
     capacityField.selectedIndex = 2;
     capacityField.options[2].disabled = false;
     syncValues(titleField, '');
-    syncValues(addressField, '');
     syncValues(typeField, 'flat');
     syncValues(priceField, '1000');
     syncValueWithMin(priceField, '1000');
