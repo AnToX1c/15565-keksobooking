@@ -21,7 +21,7 @@
   mapPinMain.draggable = true;
 
   var clearMap = function () {
-    mapPins.querySelectorAll('.map__pin').forEach(function(node){
+    mapPins.querySelectorAll('.map__pin').forEach(function (node) {
       if (node.className === 'map__pin') {
         node.parentNode.removeChild(node);
       }

@@ -2,7 +2,7 @@
 
 (function () {
   var ENTER_KEYCODE = 13;
-  var NUMBER_OF_VISIBLE_PINS = 5
+  var NUMBER_OF_VISIBLE_PINS = 5;
   var map = document.querySelector('.map');
   var template = document.querySelector('template').content;
   var templateMapPin = template.querySelector('.map__pin');
