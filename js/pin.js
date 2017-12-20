@@ -2,6 +2,7 @@
 
 (function () {
   var ENTER_KEYCODE = 13;
+  var NUMBER_OF_VISIBLE_PINS = 5
   var map = document.querySelector('.map');
   var template = document.querySelector('template').content;
   var templateMapPin = template.querySelector('.map__pin');
@@ -20,7 +21,7 @@
   window.pin = {
     render: function (arrOfPins, callback) {
       var fragmentMapPin = document.createDocumentFragment();
-      var length = arrOfPins.length > 5 ? 5 : arrOfPins.length;
+      var length = arrOfPins.length > NUMBER_OF_VISIBLE_PINS ? NUMBER_OF_VISIBLE_PINS : arrOfPins.length;
       for (var i = 0; i < length; i++) {
         fragmentMapPin.appendChild(renderMapPin(arrOfPins[i], i));
       }

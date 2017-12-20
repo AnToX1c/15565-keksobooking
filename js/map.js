@@ -21,9 +21,11 @@
   mapPinMain.draggable = true;
 
   var clearMap = function () {
-    while (mapPins.children[2]) {
-      mapPins.removeChild(mapPins.children[2]);
-    }
+    mapPins.querySelectorAll('.map__pin').forEach(function(node){
+      if (node.className === 'map__pin') {
+        node.parentNode.removeChild(node);
+      }
+    });
   };
 
   var originDataPins = [];
