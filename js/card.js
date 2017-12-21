@@ -9,9 +9,9 @@
     'house': 'Дом'
   };
   var getAmmountOfGuestsInRooms = function (guests, rooms) {
-    var roomsCases = [' комната', ' комнаты', ' комнат'];
+    var roomCases = [' комната', ' комнаты', ' комнат'];
     var cases = [2, 0, 1, 1, 1, 2];
-    var roomString = roomsCases[(rooms % 100 > 4 && rooms % 100 < 20) ? 2 : cases[(rooms % 10 < 5) ? rooms % 10 : 5]];
+    var roomString = roomCases[(rooms % 100 > 4 && rooms % 100 < 20) ? 2 : cases[(rooms % 10 < 5) ? rooms % 10 : 5]];
     var guestString = ((guests === 1) || (guests % 10 === 1)) ? ' гостя' : ' гостей';
     return rooms + roomString + ' для ' + guests + guestString;
   };
