@@ -5,8 +5,8 @@
   var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapFilters = map.querySelector('.map__filters');
-  var minPosY = 100;
-  var maxPosY = 500;
+  var MIN_POS_Y = 100;
+  var MAX_POS_Y = 500;
   var prevTimer;
   var mainPinWidth = mapPinMain.offsetWidth;
 
@@ -90,10 +90,10 @@
   var onMainPinMouseDown = function (evt) {
     evt.preventDefault();
     var setYLimit = function (posY) {
-      if (posY < minPosY) {
-        return minPosY;
-      } else if (posY > maxPosY) {
-        return maxPosY;
+      if (posY < MIN_POS_Y) {
+        return MIN_POS_Y;
+      } else if (posY > MAX_POS_Y) {
+        return MAX_POS_Y;
       } else {
         return posY;
       }
