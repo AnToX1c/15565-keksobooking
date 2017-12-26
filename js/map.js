@@ -1,12 +1,12 @@
 'use strict';
 
 (function () {
+  var MIN_POS_Y = 100;
+  var MAX_POS_Y = 500;
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapFilters = map.querySelector('.map__filters');
-  var MIN_POS_Y = 100;
-  var MAX_POS_Y = 500;
   var prevTimer;
   var mainPinWidth = mapPinMain.offsetWidth;
 
@@ -94,9 +94,8 @@
         return MIN_POS_Y;
       } else if (posY > MAX_POS_Y) {
         return MAX_POS_Y;
-      } else {
-        return posY;
       }
+      return posY;
     };
     var startCoords = {
       x: evt.clientX,
