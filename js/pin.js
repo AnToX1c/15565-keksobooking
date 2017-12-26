@@ -36,7 +36,7 @@
       }
     },
     onPinClick: function (evt, data) {
-      if (evt.target.dataset.id >= 0) {
+      if (parseInt(evt.target.dataset.id, 10) >= 0) {
         window.showCard(evt.target, data[evt.target.dataset.id]);
       }
     },
