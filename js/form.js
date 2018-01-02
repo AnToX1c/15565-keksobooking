@@ -12,6 +12,10 @@
   var capacityField = noticeForm.querySelector('#capacity');
   var roomNumberField = noticeForm.querySelector('#room_number');
   var featuresFields = noticeForm.querySelectorAll('.features input[type=checkbox]');
+  var fileChooser = noticeForm.querySelectorAll('.upload input[type=file]');
+  var avatarFoto = noticeForm.querySelector('.notice__preview img');
+  var fotoContainer = noticeForm.querySelector('.form__photo-container');
+  var draggedItem = null;
   var syncValues = function (element, value) {
     element.value = value;
   };
@@ -23,6 +27,13 @@
     for (var i = 0; i < capacityField.length; i++) {
       capacityField.options[i].disabled = true;
     }
+  };
+
+  var clearImages = function () {
+    var fotoContainerImages = fotoContainer.querySelectorAll('img');
+    fotoContainerImages.forEach(function (elem) {
+      fotoContainer.removeChild(elem);
+    });
   };
 
   var onRoomNumberChange = function (evt) {
@@ -53,6 +64,7 @@
   };
 
   var setDefaultFormFields = function () {
+    clearImages();
     disableCapacityValues();
     capacityField.selectedIndex = 2;
     capacityField.options[2].disabled = false;
@@ -66,6 +78,7 @@
     featuresFields.forEach(function (elem) {
       elem.checked = false;
     });
+    avatarFoto.src = 'img/muffin.png';
   };
 
   var onSubmit = function (evt) {
@@ -73,8 +86,63 @@
     evt.preventDefault();
   };
 
+  var renderAvatar = function (file) {
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      avatarFoto.src = reader.result;
+    });
+    reader.readAsDataURL(file);
+  };
+
+  var onDragOver = function (evt) {
+    var target = evt.target;
+    evt.dataTransfer.dropEffect = 'move';
+    if (target && target !== draggedItem && target.nodeName === 'IMG') {
+      target.parentNode.insertBefore(draggedItem, target.parentNode.children[1] !== target && target.nextSibling || target);
+    }
+    evt.preventDefault();
+  };
+
+  var onDragEnd = function (evt) {
+    fotoContainer.style.outline = 'none';
+    evt.preventDefault();
+    fotoContainer.removeEventListener('dragover', onDragOver);
+    fotoContainer.removeEventListener('dragend', onDragEnd);
+  };
+
+  var renderImages = function (file) {
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      var img = document.createElement('IMG');
+      img.width = '280';
+      img.height = '140';
+      img.src = reader.result;
+      img.style = 'cursor: move;';
+      fotoContainer.appendChild(img);
+      img.addEventListener('dragstart', function (evt) {
+        draggedItem = evt.target;
+        evt.dataTransfer.effectAllowed = 'move';
+        evt.dataTransfer.setData('text/plain', evt.target.alt);
+        fotoContainer.style.outline = '2px dashed red';
+        fotoContainer.addEventListener('dragover', onDragOver);
+        fotoContainer.addEventListener('dragend', onDragEnd);
+      });
+    });
+    reader.readAsDataURL(file);
+  };
+
+  var onFileChooserChange = function (evt) {
+    var file = evt.target.files[0];
+    if (evt.target.id === 'avatar') {
+      renderAvatar(file);
+    } else if (evt.target.id === 'images') {
+      renderImages(file);
+    }
+  };
+
   titleField.addEventListener('invalid', onTitleFieldInvalid);
   noticeForm.addEventListener('submit', onSubmit);
+
   window.form = {
     enable: function () {
       noticeForm.classList.remove('notice__form--disabled');
@@ -93,6 +161,10 @@
       window.synchronizeFields(timeinField, timeoutField, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], syncValues);
       window.synchronizeFields(typeField, priceField, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], syncValueWithMin);
       roomNumberField.addEventListener('change', onRoomNumberChange);
+      fileChooser.forEach(function (elem) {
+        elem.setAttribute('accept', 'image/*');
+        elem.addEventListener('change', onFileChooserChange);
+      });
     },
     disable: function () {
       for (var i = 0; i < noticeFormFieldset.length; i++) {
